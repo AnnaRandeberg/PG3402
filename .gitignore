@@ -3,3 +3,5 @@
 !/.idea/modules.xml
 *.iml
 .idea/
+.gitattributes
+.env
