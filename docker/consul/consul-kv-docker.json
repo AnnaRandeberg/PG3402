@@ -1,0 +1,27 @@
+[
+  {
+    "key": "config/",
+    "flags": 0,
+    "value": ""
+  },
+  {
+    "key": "config/quizservice,dev/",
+    "flags": 0,
+    "value": ""
+  },
+  {
+    "key": "config/quizservice,dev/application.yml",
+    "flags": 0,
+    "value": "c2VydmVyOgogIHBvcnQ6CiAgODA4MQpzcHJpbmc6CiAgcmFiYml0bXEKICAgIGhvc3Q6CiAgICAgIHJhYmJpdG1xCiAgICBwb3J0OgogICAgIC01Njcy"
+  },
+  {
+    "key": "config/gateway,dev/",
+    "flags": 0,
+    "value": ""
+  },
+  {
+    "key": "config/gateway,dev/application.yml",
+    "flags": 0,
+    "value": "c2VydmVyOgogIHBvcnQ6CiAgODAwMApzcHJpbmc6CiAgZ2F0ZXdheToKICAgIHJvdXRlczoKICAgICAgLSB1cmk6IGxnOi8vcXVpenNlcnZpY2UvCiAgICAgICAgcHJlZGljYXRlczogCiAgICAgICAgIC0gUGF0aD0vKi8="
+  }
+]

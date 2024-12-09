@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+
+  # QuizService
+  quizservice:
+    image: quizservice:0.0.1-SNAPSHOT
+    ports:
+      - '8081:8081'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - rabbitmq-dev
+      - consul-dev
+    networks:
+      - quiz_app_network
+
+  # Gateway
+  gateway:
+    image: gateway:0.0.1-SNAPSHOT
+    ports:
+      - '8000:8000'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - quizservice
+      - rabbitmq-dev
+      - consul-dev
+    networks:
+      - quiz_app_network
+
+  # RabbitMQ
+  rabbitmq-dev:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - quiz_app_network
+
+  # Consul
+  consul-dev:
+    image: hashicorp/consul:1.19.2
+    container_name: consul
+    ports:
+      - '8500:8500'
+    command: 'agent -dev -node=quiz-node -client=0.0.0.0 -log-level=INFO'
+    networks:
+      - quiz_app_network
+
+networks:
+  quiz_app_network:
+    driver: bridge
