@@ -4,7 +4,7 @@ services:
 
   # QuizService
   quizservice:
-    image: quizservice:0.0.1-SNAPSHOT
+    build: ../quizservice  # Building image from Dockerfile in quizservice-folder
     ports:
       - '8081:8081'
     environment:
@@ -18,7 +18,7 @@ services:
 
   # Gateway
   gateway:
-    image: gateway:0.0.1-SNAPSHOT
+    build: ../gateway  # Building image from Dockerfile in gateway-folder
     ports:
       - '8000:8000'
     environment:
