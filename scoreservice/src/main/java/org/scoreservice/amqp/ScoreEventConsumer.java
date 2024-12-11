@@ -15,8 +15,8 @@ public class ScoreEventConsumer {
     private final ScoreRepository scoreRepository;
 
     @RabbitListener(queues = "quiz.queue")
-    public void handleQuizCompletedEvent(Score score) {
-        log.info("Received event: {}", score);
+    public void handleQuizEvent(Score score) {
+        log.info("Received quiz event: {}", score);
         scoreRepository.save(score);
     }
 }

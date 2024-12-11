@@ -22,7 +22,7 @@ spring:
     gateway:
       routes:
         - id: quizservice
-          uri: lb://quizservice/
+          uri: lb://quizservice
           predicates:
             - Path=/quizapi/**
       globalcors:
