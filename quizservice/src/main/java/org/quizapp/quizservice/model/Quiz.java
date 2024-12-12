@@ -15,5 +15,4 @@ public class Quiz {
     private String title;
     private String subject;
     private String chapter;
-    private String questions;
 }
