@@ -25,12 +25,29 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.findById(quizId).orElse(null);
     }
 
-    @Override
+   /* @Override
     public Quiz addQuiz(Quiz quiz) {
         Quiz savedQuiz = quizRepository.save(quiz);
         return savedQuiz;
-    }
+    }*/
 
+    @Override
+    public Quiz addQuiz(Quiz quiz) {
+        for (Question question : quiz.getQuestions()) {
+            question.setQuiz(quiz);
+            log.info("Setting quiz for question: " + question.getId());
+        }
+        Quiz savedQuiz = quizRepository.save(quiz);
+        log.info("Generated quiz ID: " + savedQuiz.getId());
+
+        if (savedQuiz.getId() == null) {
+            throw new RuntimeException("Quiz ID was not generated correctly.");
+        }
+
+        questionRepository.saveAll(quiz.getQuestions());
+
+        return savedQuiz;
+    }
 
 
 
