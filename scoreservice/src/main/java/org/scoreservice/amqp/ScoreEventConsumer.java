@@ -16,7 +16,12 @@ public class ScoreEventConsumer {
 
     @RabbitListener(queues = "quiz.queue")
     public void handleQuizEvent(Score score) {
-        log.info("Received quiz event: {}", score);
-        scoreRepository.save(score);
+        try {
+            log.info("Received quiz event: {}", score);
+            scoreRepository.save(score);
+        } catch (Exception e) {
+            log.error("Failed to process quiz event: {}", score, e);
+        }
     }
+
 }
