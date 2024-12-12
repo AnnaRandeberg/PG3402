@@ -16,6 +16,20 @@ services:
     networks:
       - quiz_app_network
 
+  # ScoreService
+  scoreservice:
+    build: ../scoreservice  # Building image from Dockerfile in scoreservice-folder
+    ports:
+      - '8082:8082'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - rabbitmq-dev
+      - consul-dev
+    networks:
+      - quiz_app_network
+
   # Gateway
   gateway:
     build: ../gateway  # Building image from Dockerfile in gateway-folder
