@@ -13,7 +13,7 @@ public class AmqpConfigurations {
     public TopicExchange quizTopicExchange(
             @Value("${amqp.exchange.name}") final String exchangeName
     ) {
-        // Opprett en Topic Exchange
+
         return ExchangeBuilder
                 .topicExchange(exchangeName)
                 .durable(true)
