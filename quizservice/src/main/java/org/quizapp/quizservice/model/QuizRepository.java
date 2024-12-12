@@ -1,14 +1,9 @@
 package org.quizapp.quizservice.model;
 
 import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface QuizRepository extends CrudRepository<Quiz, Long> {
 
-
-    Quiz findQuizByQuizId(Long quizId);
-
-
-    List<Quiz> findAll();
+    Optional<Quiz> findById(Long id);
 }
