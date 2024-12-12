@@ -18,7 +18,7 @@ services:
 
   # Gateway
   gateway:
-    build: ../gateway  # Building image from Dockerfile in gateway-folderr
+    build: ../gateway  # Building image from Dockerfile in gateway-folder
     ports:
       - '8000:8000'
     environment:
