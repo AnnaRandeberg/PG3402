@@ -50,7 +50,6 @@ public class QuizServiceImpl implements QuizService {
     }
 
 
-
     @Override
     public List<Quiz> getAllQuizzes() {
         return (List<Quiz>) quizRepository.findAll();

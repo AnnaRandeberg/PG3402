@@ -1,5 +1,6 @@
 package org.quizapp.quizservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Quiz {
     private String subject;
 
     @OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Question> questions;
 
     // Getters og Setters

@@ -1,5 +1,6 @@
 package org.quizapp.quizservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false)
+    @JsonBackReference
     private Quiz quiz;
 
     @Column(name = "question_text", nullable = false)
