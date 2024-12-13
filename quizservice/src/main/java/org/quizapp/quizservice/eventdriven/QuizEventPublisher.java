@@ -1,10 +1,12 @@
 package org.quizapp.quizservice.eventdriven;
 
 import lombok.extern.slf4j.Slf4j;
-import org.quizapp.quizservice.model.Quiz;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -21,9 +23,16 @@ public class QuizEventPublisher {
         this.exchangeName = exchangeName;
     }
 
-    public void publishQuizEvent(Quiz quiz, String eventType) {
-        String routingKey = "quiz." + eventType.toLowerCase();
-        log.info("Publishing event to RabbitMQ: {} with routing key: {}", quiz, routingKey);
-        amqpTemplate.convertAndSend(exchangeName, routingKey, quiz);
+    public void publishQuizEvent(String userId, Long quizId, int points) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("userId", userId);
+        message.put("quizId", quizId);
+        message.put("points", points);
+
+        String routingKey = "quiz.completed";
+        amqpTemplate.convertAndSend(exchangeName, routingKey, message);
+        log.info("Published quiz event to RabbitMQ: {}", message);
     }
+
 }
+

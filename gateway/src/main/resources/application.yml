@@ -25,6 +25,10 @@ spring:
           uri: lb://quizservice
           predicates:
             - Path=/quizapi/**
+        - id: scoreservice
+          uri: lb://scoreservice
+          predicates:
+            - Path=/scores/**
       globalcors:
         cors-configurations:
           '[/**]':
