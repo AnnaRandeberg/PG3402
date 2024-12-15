@@ -21,6 +21,10 @@ spring:
         default-context: defaults
     gateway:
       routes:
+        - id: loginservice
+          uri: lb://loginservice
+          predicates:
+            - Path=/api/users/**
         - id: quizservice
           uri: lb://quizservice
           predicates:
