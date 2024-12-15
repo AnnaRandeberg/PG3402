@@ -1,8 +1,10 @@
+/*soure:https://github.com/bogdanmarculescu/microservices2024/blob/main/ongoing/src/main/java/org/cards/ongoinground/configurations/AmqpConfiguration.java*/
+
 package org.quizapp.quizservice.configurations;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,14 +12,21 @@ import org.springframework.context.annotation.Configuration;
 public class AmqpConfigurations {
 
     @Bean
-    public TopicExchange quizTopicExchange(
-            @Value("${amqp.exchange.name}") final String exchangeName
-    ) {
+    public TopicExchange learningAppExchange(
+            @Value("${amqp.exchange.name}") final String exchangeName) {
+        return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
+    }
 
-        return ExchangeBuilder
-                .topicExchange(exchangeName)
-                .durable(true)
-                .build();
+    @Bean
+    public Queue quizCompleteQueue(@Value("${amqp.queue.complete.name}") final String queueName) {
+        return QueueBuilder.durable(queueName).build();
+    }
+
+    @Bean
+    public Binding quizCompleteBinding(
+            final Queue quizCompleteQueue,
+            final TopicExchange learningAppExchange) {
+        return BindingBuilder.bind(quizCompleteQueue).to(learningAppExchange).with("quiz.complete");
     }
 
     @Bean
@@ -25,13 +34,4 @@ public class AmqpConfigurations {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Bean
-    public Queue quizQueue() {
-        return new Queue("quiz.queue", true);
-    }
-
-    @Bean
-    public Binding quizBinding(Queue quizQueue, TopicExchange quizTopicExchange) {
-        return BindingBuilder.bind(quizQueue).to(quizTopicExchange).with("quiz.#");
-    }
 }

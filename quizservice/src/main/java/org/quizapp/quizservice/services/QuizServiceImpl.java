@@ -65,4 +65,12 @@ public class QuizServiceImpl implements QuizService {
         quizRepository.deleteById(quizId);
     }
 
+    @Override
+    public void saveQuiz(Quiz quiz) {
+        for (Question question : quiz.getQuestions()) {
+            question.setQuiz(quiz);
+        }
+        quizRepository.save(quiz);
+    }
+
 }

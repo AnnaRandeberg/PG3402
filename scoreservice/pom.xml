@@ -33,7 +33,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -110,6 +113,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.20.1</version>
+				<configuration>
+					<url>jdbc:h2:file:~/learningapp;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</url>
+					<user>user</user>
+					<password></password>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -121,6 +134,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
