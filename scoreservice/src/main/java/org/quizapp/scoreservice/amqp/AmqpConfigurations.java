@@ -1,4 +1,4 @@
-package org.scoreservice.amqp;
+package org.quizapp.scoreservice.amqp;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

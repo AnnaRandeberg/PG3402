@@ -1,11 +1,11 @@
-package org.scoreservice.amqp;
+package org.quizapp.scoreservice.amqp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.scoreservice.client.QuizServiceClient;
-import org.scoreservice.model.Score;
-import org.scoreservice.repository.ScoreRepository;
+import org.quizapp.scoreservice.client.QuizServiceClient;
+import org.quizapp.scoreservice.model.Score;
+import org.quizapp.scoreservice.repository.ScoreRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +21,7 @@ public class ScoreListener {
 
     @RabbitListener(queues = "quiz.queue")
 
-   /* public void handleQuizEvent(Score score) {
-        try {
-            log.info("Received quiz event: {}", score);
-            scoreRepository.save(score);
-        } catch (Exception e) {
-            log.error("Failed to process quiz event: {}", score, e);
-        }*/
+
 
     @RabbitListener(queues = "quiz.queue")
     public void handleQuizCompletedEvent(Map<String, Object> message) {
