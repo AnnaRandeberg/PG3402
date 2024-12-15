@@ -12,6 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 public class AmqpConfigurations {
 
     @Bean
+    public Queue userQueue(@Value("${amqp.queue.user.name}") String queueName) {
+        return QueueBuilder.durable(queueName).build();
+    }
+
+
+    @Bean
     public TopicExchange learningAppExchange(
             @Value("${amqp.exchange.name}") final String exchangeName) {
         return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
@@ -21,5 +27,6 @@ public class AmqpConfigurations {
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
+
 
 }

@@ -42,6 +42,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - AMQP_EXCHANGE_NAME=learningAppExchange
+      - AMQP_QUEUE_COMPLETE_NAME=quiz.complete
     volumes:
       - quizservice-data:/data
     depends_on:
@@ -74,6 +76,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - AMQP_EXCHANGE_NAME=learningAppExchange
+      - AMQP_QUEUE_COMPLETE_NAME=user.queue
     volumes:
       - quizservice-data:/data
     depends_on:

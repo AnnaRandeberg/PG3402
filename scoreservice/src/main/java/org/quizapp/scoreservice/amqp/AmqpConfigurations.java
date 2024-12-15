@@ -15,17 +15,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmqpConfigurations {
 
-    @Bean
-    public TopicExchange learningAppExchange(
-            @Value("${amqp.exchange.name}") final String exchangeName) {
-        return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
-    }
+
 
     @Bean
     public Queue quizCompleteQueue(@Value("${amqp.queue.complete.name}") final String queueName) {
         return QueueBuilder.durable(queueName).build();
     }
 
+    @Bean
+    public TopicExchange learningAppExchange(
+            @Value("${amqp.exchange.name}") final String exchangeName) {
+        return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
+    }
     @Bean
     public Jackson2JsonMessageConverter consumerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
