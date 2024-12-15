@@ -28,12 +28,6 @@ public class QuizController {
         return quizService.getAllQuizzes();
     }
 
-   /* @PostMapping("/quiz")
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        Quiz savedQuiz = quizService.addQuiz(quiz);
-        quizEventPublisher.publishQuizEvent(savedQuiz.getQuizId().toString(), savedQuiz.getQuestions().size()); // Publiser quiz-event
-        return ResponseEntity.ok(savedQuiz);
-    }*/
 
     @PostMapping("/quiz")
     public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
@@ -57,7 +51,7 @@ public class QuizController {
                 points
         );
 
-        return ResponseEntity.ok("Quiz completed. Points calculated and event published.");
+        return ResponseEntity.ok("Quiz completed. Points calculated!.");
     }
 
 
