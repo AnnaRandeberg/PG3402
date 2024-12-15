@@ -1,4 +1,4 @@
-package org.scoreservice.dtos;
+package org.quizapp.scoreservice.dtos;
 import lombok.Data;
 @Data
 public class quizDTO {
