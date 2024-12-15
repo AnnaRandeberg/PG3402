@@ -1,8 +1,8 @@
-package org.scoreservice.controller;
+package org.quizapp.scoreservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.scoreservice.model.Score;
-import org.scoreservice.repository.ScoreRepository;
+import org.quizapp.scoreservice.model.Score;
+import org.quizapp.scoreservice.repository.ScoreRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

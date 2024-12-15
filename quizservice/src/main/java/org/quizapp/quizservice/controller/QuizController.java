@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.quizapp.quizservice.model.Quiz;
 import org.quizapp.quizservice.services.QuizService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.quizapp.quizservice.eventdriven.QuizEventPublisher;
+import org.quizapp.quizservice.model.QuizComplete;
 
 
 import java.util.List;
@@ -17,30 +20,48 @@ import java.util.List;
 public class QuizController {
 
     private final QuizService quizService;
+    private final QuizEventPublisher quizEventPublisher;
 
-    @GetMapping("/quizzes")
+
+    @GetMapping("/quiz")
     public List<Quiz> getQuizzes() {
         return quizService.getAllQuizzes();
     }
 
-    @PostMapping("/quizzes")
-    public Quiz createQuiz(@RequestBody Quiz quiz) {
-        try {
-            return quizService.addQuiz(quiz);
-        } catch (Exception e) {
-            log.error("Error creating quiz", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create quiz", e);
+
+    @PostMapping("/quiz")
+    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
+        Quiz savedQuiz = quizService.addQuiz(quiz);
+        return ResponseEntity.ok(savedQuiz);
+    }
+
+
+    @PostMapping("/complete")
+    public ResponseEntity<String> completeQuiz(@RequestBody QuizComplete quizComplete) {
+        Quiz quiz = quizService.getQuizById(quizComplete.getQuizId());
+        if (quiz == null) {
+            return ResponseEntity.badRequest().body("Quiz not found");
         }
+
+        int points = (quizComplete.getCorrectAnswers() * 100) / quizComplete.getTotalQuestions();
+
+        quizEventPublisher.publishQuizEvent(
+                quizComplete.getUserId(),
+                quizComplete.getQuizId(),
+                points
+        );
+
+        return ResponseEntity.ok("Quiz completed. Points calculated!.");
     }
 
 
 
-    @GetMapping("/quizzes/{id}")
+    @GetMapping("/quiz/{id}")
     public Quiz getQuiz(@PathVariable Long id) {
         return quizService.getQuizById(id);
     }
 
-    @DeleteMapping("/quizzes/{id}")
+    @DeleteMapping("/quiz/{id}")
     public void deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
     }

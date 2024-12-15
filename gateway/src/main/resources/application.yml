@@ -21,10 +21,18 @@ spring:
         default-context: defaults
     gateway:
       routes:
+        - id: loginservice
+          uri: lb://loginservice
+          predicates:
+            - Path=/api/users/**
         - id: quizservice
           uri: lb://quizservice
           predicates:
             - Path=/quizapi/**
+        - id: scoreservice
+          uri: lb://scoreservice
+          predicates:
+            - Path=/scores/**
       globalcors:
         cors-configurations:
           '[/**]':

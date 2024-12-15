@@ -38,9 +38,9 @@ public class QuizServiceImpl implements QuizService {
             log.info("Setting quiz for question: " + question.getId());
         }
         Quiz savedQuiz = quizRepository.save(quiz);
-        log.info("Generated quiz ID: " + savedQuiz.getId());
+        log.info("Generated quiz ID: " + savedQuiz.getQuizId());
 
-        if (savedQuiz.getId() == null) {
+        if (savedQuiz.getQuizId() == null) {
             throw new RuntimeException("Quiz ID was not generated correctly.");
         }
 
