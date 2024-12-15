@@ -1,8 +1,8 @@
-package org.scoreservice.client;
+package org.quizapp.scoreservice.client;
 
 /*source: https://github.com/bogdanmarculescu/microservices2024/blob/main/ongoing/src/main/java/org/cards/ongoinground/clients/RecorderClient.java*/
 import lombok.extern.slf4j.Slf4j;
-import org.scoreservice.dtos.quizDTO;
+import org.quizapp.scoreservice.dtos.quizDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpHeaders;
