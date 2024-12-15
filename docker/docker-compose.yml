@@ -4,21 +4,25 @@ services:
 
   # QuizService
   quizservice:
-    build: ../quizservice  # Building image from Dockerfile in quizservice-folder
+    build: ../quizservice
     ports:
       - '8081:8081'
     environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:~/learningapp
+      - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+    volumes:
+      - quizservice-data:/data
     depends_on:
       - rabbitmq-dev
       - consul-dev
     networks:
-      - quiz_app_network
+      - my_quiz_app_network
 
   # ScoreService
   scoreservice:
-    build: ../scoreservice  # Building image from Dockerfile in scoreservice-folder
+    build: ../scoreservice
     ports:
       - '8082:8082'
     environment:
@@ -28,32 +32,46 @@ services:
       - rabbitmq-dev
       - consul-dev
     networks:
-      - quiz_app_network
+      - my_quiz_app_network
 
   # Gateway
   gateway:
-    build: ../gateway  # Building image from Dockerfile in gateway-folder
+    build: ../gateway
     ports:
       - '8000:8000'
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
     depends_on:
-      - quizservice
       - rabbitmq-dev
       - consul-dev
     networks:
-      - quiz_app_network
+      - my_quiz_app_network
+
+  # LoginService
+  loginservice:
+    build: ../loginservice
+    ports:
+      - '8084:8084'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - rabbitmq-dev
+      - consul-dev
+    networks:
+      - my_quiz_app_network
+
 
   # RabbitMQ
   rabbitmq-dev:
-    image: rabbitmq:3-management
+    image: rabbitmq:management
     container_name: rabbitmq
     ports:
       - '5672:5672'
       - '15672:15672'
     networks:
-      - quiz_app_network
+      - my_quiz_app_network
 
   # Consul
   consul-dev:
@@ -63,8 +81,13 @@ services:
       - '8500:8500'
     command: 'agent -dev -node=quiz-node -client=0.0.0.0 -log-level=INFO'
     networks:
-      - quiz_app_network
+      - my_quiz_app_network
+
+volumes:
+  quizservice-data:
+    driver: local
 
 networks:
-  quiz_app_network:
+  my_quiz_app_network:
     driver: bridge
+
