@@ -11,6 +11,7 @@ import java.util.*;
 @RequestMapping("/quizapi/scores")
 public class ScoreClientController {
 
+    //ScoreClientController gjør et synkront REST kall til scoreservice
     private final RestTemplate restTemplate;
 
     public ScoreClientController() {

@@ -1,16 +1,17 @@
 package org.quizapp.loginservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.quizapp.loginservice.dtos.FlashcardDTO;
 import org.quizapp.loginservice.dtos.UserDTO;
 import org.quizapp.loginservice.model.User;
 import org.quizapp.loginservice.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.quizapp.loginservice.client.FlashcardClient;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-
+    private final FlashcardClient flashcardClient;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
@@ -44,23 +45,42 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password."));
     }
 
+//viser kun fornavn, etternavn og rolle navn
+@GetMapping("/api/users")
+public ResponseEntity<List<UserDTO>> getAllUsers() {
+    List<UserDTO> userDTOs = userService.getAllUsers()
+            .stream()
+            .map(user -> new UserDTO(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole()
+            ))
+            .toList();
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    return ResponseEntity.ok(userDTOs);
+}
+
+    @GetMapping("/search/{firstName}/{lastName}")
+    public ResponseEntity<List<UserDTO>> searchUsers(
+            @PathVariable String firstName,
+            @PathVariable String lastName) {
+
+        List<UserDTO> users = userService.searchUsersByFirstAndLastName(firstName, lastName)
+                .stream()
+                .map(user -> new UserDTO(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getRole()))
+                .toList();
+
         return ResponseEntity.ok(users);
     }
 
-
-    @GetMapping("/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(user -> ResponseEntity.ok(new UserDTO(user.getEmail(), user.getRole())))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @GetMapping("/flashcards/{quizId}")
+    public ResponseEntity<List<FlashcardDTO>> getFlashcardsForQuiz(@PathVariable Long quizId) {
+        List<FlashcardDTO> flashcards = flashcardClient.getFlashcards(quizId);
+        return ResponseEntity.ok(flashcards);
     }
-
-
-
 
 
 }

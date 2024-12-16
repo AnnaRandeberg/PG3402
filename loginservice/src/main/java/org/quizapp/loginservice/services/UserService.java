@@ -43,13 +43,13 @@ public class UserService {
         return Optional.empty();
     }
 
+    public List<User> searchUsersByFirstAndLastName(String firstName, String lastName) {
+        return userRepository.findByFirstNameAndLastName(firstName, lastName);
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
-}
+

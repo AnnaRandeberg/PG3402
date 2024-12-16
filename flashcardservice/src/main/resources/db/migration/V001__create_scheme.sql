@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS flashcards (
+flashcard_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+question_text VARCHAR(255) NOT NULL,
+answer VARCHAR(255) NOT NULL
+);

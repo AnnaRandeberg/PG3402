@@ -33,6 +33,10 @@ spring:
           uri: lb://scoreservice
           predicates:
             - Path=/scores/**
+        - id: flashcardservice
+          uri: lb://flashcardservice
+          predicates:
+              - Path=/flashcards/**
       globalcors:
         cors-configurations:
           '[/**]':
