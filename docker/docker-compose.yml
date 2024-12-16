@@ -2,6 +2,16 @@
 
 services:
 
+  flyway:
+    image: flyway/flyway:latest
+    container_name: flyway-repair
+    command: -url=jdbc:h2:file:~/learningapp -user=user repair
+    environment:
+      - FLYWAY_URL=jdbc:h2:file:~/learningapp
+      - FLYWAY_USER=user
+    networks:
+      - my_quiz_app_network
+
   # QuizService
   quizservice:
     build: ../quizservice
@@ -12,6 +22,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - AMQP_EXCHANGE_NAME=learningAppExchange
+      - AMQP_QUEUE_COMPLETE_NAME=quiz.complete
     volumes:
       - quizservice-data:/data
     depends_on:
@@ -26,8 +38,14 @@ services:
     ports:
       - '8082:8082'
     environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:~/learningapp
+      - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - AMQP_EXCHANGE_NAME=learningAppExchange
+      - AMQP_QUEUE_COMPLETE_NAME=quiz.complete
+    volumes:
+      - quizservice-data:/data
     depends_on:
       - rabbitmq-dev
       - consul-dev
@@ -54,8 +72,14 @@ services:
     ports:
       - '8084:8084'
     environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:~/learningapp
+      - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - AMQP_EXCHANGE_NAME=learningAppExchange
+      - AMQP_QUEUE_COMPLETE_NAME=user.queue
+    volumes:
+      - quizservice-data:/data
     depends_on:
       - rabbitmq-dev
       - consul-dev

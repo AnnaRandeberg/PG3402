@@ -1,4 +1,4 @@
-package org.quizapp.scoreservice.dtos;
+/*package org.quizapp.scoreservice.dtos;
 import lombok.Data;
 @Data
 public class quizDTO {
@@ -6,4 +6,4 @@ public class quizDTO {
     private String title;
     private String subject;
     private String chapter;
-}
+}*/

@@ -1,10 +1,13 @@
 package org.quizapp.loginservice.services;
 
 import lombok.RequiredArgsConstructor;
+import org.quizapp.loginservice.eventdriven.UserEventPublisher;
 import org.quizapp.loginservice.model.User;
 import org.quizapp.loginservice.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,38 +15,41 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserEventPublisher userPublisher;
 
-    private static final String ADMIN_EMAIL = "admin@gmail.com";
-    private static final String ADMIN_PASSWORD = "secret";
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User registerUser(User user) {
-        if (ADMIN_EMAIL.equals(user.getEmail())) {
-            throw new RuntimeException("Cannot create user with admin email");
-        }
-
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("The email is already in use");
         }
 
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+
         user.setRole("STUDENT");
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+
+        userPublisher.publishUserCreatedEvent(savedUser);
+
+        return savedUser;
     }
 
     public Optional<User> loginUser(String email, String password) {
-        if (ADMIN_EMAIL.equals(email) && ADMIN_PASSWORD.equals(password)) {
-            User adminUser = new User();
-            adminUser.setEmail(ADMIN_EMAIL);
-            adminUser.setFirstName("Admin");
-            adminUser.setLastName("User");
-            adminUser.setRole("ADMIN");
-            return Optional.of(adminUser);
-        }
-
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && user.get().getPasswordHash().equals(password)) {
+        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPasswordHash())) {
             return user;
         }
-
         return Optional.empty();
+    }
+
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
