@@ -6,7 +6,7 @@ import org.quizapp.scoreservice.repository.ScoreRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//server.port=8082
 @RestController
 @RequestMapping("/scores")
 @RequiredArgsConstructor

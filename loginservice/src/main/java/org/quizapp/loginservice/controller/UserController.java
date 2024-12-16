@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.quizapp.loginservice.client.FlashcardClient;
 
 import java.util.List;
-
+//server.port=8084
 
 @RestController
 @RequestMapping("/api/users")

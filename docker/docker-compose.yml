@@ -96,8 +96,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
-    volumes:
-      - flashcardservice-data:/data
     depends_on:
       - quizservice
       - consul-dev
