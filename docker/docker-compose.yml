@@ -86,6 +86,25 @@ services:
     networks:
       - my_quiz_app_network
 
+  # FlashcardService
+  flashcardservice:
+    build: ../flashcardservice
+    ports:
+      - '8087:8087'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:~/learningapp
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    volumes:
+      - flashcardservice-data:/data
+    depends_on:
+      - quizservice
+      - consul-dev
+    networks:
+      - my_quiz_app_network
+
+
 
   # RabbitMQ
   rabbitmq-dev:
