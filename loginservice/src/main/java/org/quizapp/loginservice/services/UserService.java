@@ -37,11 +37,23 @@ public class UserService {
 
     public Optional<User> loginUser(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPasswordHash())) {
-            return user;
+
+        if (user.isPresent()) {
+            System.out.println("Raw password: " + password);
+            System.out.println("Hashed password from DB: " + user.get().getPasswordHash());
+
+            if (passwordEncoder.matches(password, user.get().getPasswordHash())) {
+                System.out.println("Password matches!");
+                return user;
+            } else {
+                System.out.println("Password does not match.");
+            }
+        } else {
+            System.out.println("User not found for email: " + email);
         }
         return Optional.empty();
     }
+
 
     public List<User> searchUsersByFirstAndLastName(String firstName, String lastName) {
         return userRepository.findByFirstNameAndLastName(firstName, lastName);

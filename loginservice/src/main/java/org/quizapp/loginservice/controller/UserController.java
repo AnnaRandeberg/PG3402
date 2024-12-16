@@ -3,6 +3,7 @@ package org.quizapp.loginservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.quizapp.loginservice.dtos.FlashcardDTO;
 import org.quizapp.loginservice.dtos.UserDTO;
+import org.quizapp.loginservice.dtos.UserRegisterDTO;
 import org.quizapp.loginservice.model.User;
 import org.quizapp.loginservice.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.quizapp.loginservice.client.FlashcardClient;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -21,9 +23,17 @@ public class UserController {
     private final UserService userService;
     private final FlashcardClient flashcardClient;
 
+    //denne funker
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRequest) {
         try {
+            User user = new User();
+            user.setEmail(userRequest.getEmail());
+            user.setPasswordHash(userRequest.getRawPassword());
+            user.setFirstName(userRequest.getFirstName());
+            user.setLastName(userRequest.getLastName());
+            user.setRole(userRequest.getRole() != null ? userRequest.getRole() : "STUDENT");
+
             userService.registerUser(user);
             return ResponseEntity.ok("User registered!");
         } catch (RuntimeException e) {
@@ -31,22 +41,20 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        return userService.loginUser(user.getEmail(), user.getPasswordHash())
-                .map(u -> {
-                    if (u.getRole().equals("ADMIN")) {
-                        return ResponseEntity.ok("Velcome admin, " + u.getFirstName() + "!");
-                    } else {
-                        return ResponseEntity.ok("Velcome, " + u.getFirstName() + "!");
-                    }
-                })
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
+        String email = loginRequest.get("email");
+        String rawPassword = loginRequest.get("rawPassword");
+
+        return userService.loginUser(email, rawPassword)
+                .map(u -> ResponseEntity.ok("Welcome, " + u.getFirstName()))
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password."));
     }
 
-//viser kun fornavn, etternavn og rolle navn
-@GetMapping("/api/users")
+
+//viser fornavn, etternavn og rolle navn
+    //Denne funker
+@GetMapping
 public ResponseEntity<List<UserDTO>> getAllUsers() {
     List<UserDTO> userDTOs = userService.getAllUsers()
             .stream()

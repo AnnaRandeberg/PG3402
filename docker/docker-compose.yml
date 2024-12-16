@@ -2,16 +2,6 @@
 
 services:
 
-  flyway:
-    image: flyway/flyway:latest
-    container_name: flyway-repair
-    command: -url=jdbc:h2:file:~/learningapp -user=user repair
-    environment:
-      - FLYWAY_URL=jdbc:h2:file:~/learningapp
-      - FLYWAY_USER=user
-    networks:
-      - my_quiz_app_network
-
   # QuizService
   quizservice:
     build: ../quizservice
@@ -97,7 +87,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONSUL_HOST=consul
     volumes:
-      - flashcardservice-data:/data
+      - quizservice-data:/data
     depends_on:
       - quizservice
       - consul-dev
