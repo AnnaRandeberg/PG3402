@@ -141,14 +141,13 @@ public class QuizController {
         return ResponseEntity.ok(savedQuiz);
     }*/
 
-    //denne funker ikke
+   /* //denne funker ikke
     // Opprett quiz kun hvis bruker er ADMIN
     @PostMapping
-    public ResponseEntity<String> createQuiz(@RequestBody Quiz quiz, @RequestParam String email) {
+    public ResponseEntity<String> createQuiz(@RequestBody QuizRequestDTO quizRequest) {
         try {
-            UserDTO userDTO = getUserDTO(email);
 
-            if (!"ADMIN".equals(userDTO.getRole())) {
+            if (!"admin@gmail.com".equalsIgnoreCase(quizRequest.getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admins can create quizzes.");
             }
 
@@ -158,7 +157,7 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
     }
-
+*/
     //denne funker
     @PostMapping("/complete")
     public ResponseEntity<String> completeQuiz(@RequestBody QuizCompleteDTO quizComplete) {
