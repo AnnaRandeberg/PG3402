@@ -24,9 +24,15 @@ public class AmqpConfigurations {
     }
 
     @Bean
+    public Binding userCreatedBinding(Queue userQueue, TopicExchange learningAppExchange) {
+        return BindingBuilder.bind(userQueue).to(learningAppExchange).with("user.created");
+    }
+
+    @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
+
 
 
 }

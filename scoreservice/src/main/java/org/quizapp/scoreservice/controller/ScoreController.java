@@ -14,11 +14,14 @@ public class ScoreController {
 
     private final ScoreRepository scoreRepository;
 
+    //denne funker
     @GetMapping
     public List<Score> getAllScores() {
         return scoreRepository.findAll();
     }
 
+
+    //denne funker
     @PostMapping
     public Score addScore(@RequestBody Score score) {
         return scoreRepository.save(score);

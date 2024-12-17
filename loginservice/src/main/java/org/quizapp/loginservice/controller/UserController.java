@@ -23,6 +23,19 @@ public class UserController {
     private final UserService userService;
     private final FlashcardClient flashcardClient;
 
+
+
+    @GetMapping("/exists")
+    public ResponseEntity<?> checkUserExists(@RequestParam String email) {
+        boolean userExists = userService.existsByEmail(email);
+        if (!userExists) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
+    //denne funker
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRequest) {
         try {
@@ -40,7 +53,6 @@ public class UserController {
         }
     }
 
-    //funker ikke.. problem med å hashe passord
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
@@ -52,19 +64,21 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> userDTOs = userService.getAllUsers()
-                .stream()
-                .map(user -> new UserDTO(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getRole()
-                ))
-                .toList();
+//viser fornavn, etternavn og rolle navn
+    //Denne funker
+@GetMapping
+public ResponseEntity<List<UserDTO>> getAllUsers() {
+    List<UserDTO> userDTOs = userService.getAllUsers()
+            .stream()
+            .map(user -> new UserDTO(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole()
+            ))
+            .toList();
 
-        return ResponseEntity.ok(userDTOs);
-    }
+    return ResponseEntity.ok(userDTOs);
+}
 
     @GetMapping("/search/{firstName}/{lastName}")
     public ResponseEntity<List<UserDTO>> searchUsers(
@@ -81,8 +95,6 @@ public class UserController {
 
         return ResponseEntity.ok(users);
     }
-
-    //ikke testet, fatte ikke?
 
     @GetMapping("/flashcards/{quizId}")
     public ResponseEntity<List<FlashcardDTO>> getFlashcardsForQuiz(@PathVariable Long quizId) {

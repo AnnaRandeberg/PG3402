@@ -5,6 +5,7 @@ import org.quizapp.loginservice.eventdriven.UserEventPublisher;
 import org.quizapp.loginservice.model.User;
 import org.quizapp.loginservice.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserService {
     private final UserEventPublisher userPublisher;
 
     private final BCryptPasswordEncoder passwordEncoder;
+
 
     public User registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -55,6 +57,9 @@ public class UserService {
         return Optional.empty();
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email); // checks in database
+    }
 
     public List<User> searchUsersByFirstAndLastName(String firstName, String lastName) {
         return userRepository.findByFirstNameAndLastName(firstName, lastName);
