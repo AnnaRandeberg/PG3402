@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quizapp.quizservice.dtos.*;
 import org.quizapp.quizservice.eventdriven.UserEventConsumer;
+import org.quizapp.quizservice.model.Question;
 import org.quizapp.quizservice.model.Quiz;
 import org.quizapp.quizservice.services.QuizService;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.quizapp.quizservice.model.QuizComplete;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -141,15 +143,29 @@ public class QuizController {
         return ResponseEntity.ok(savedQuiz);
     }*/
 
-   /* //denne funker ikke
+   //denne funker
     // Opprett quiz kun hvis bruker er ADMIN
     @PostMapping
-    public ResponseEntity<String> createQuiz(@RequestBody QuizRequestDTO quizRequest) {
+    public ResponseEntity<String> createQuiz(@RequestBody CreateQuizDTO createQuizDTO) {
         try {
 
-            if (!"admin@gmail.com".equalsIgnoreCase(quizRequest.getEmail())) {
+            if (!"admin@gmail.com".equalsIgnoreCase(createQuizDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admins can create quizzes.");
             }
+
+            Quiz quiz = new Quiz();
+            quiz.setTitle(createQuizDTO.getTitle());
+            quiz.setChapter(createQuizDTO.getChapter());
+            quiz.setSubject(createQuizDTO.getSubject());
+
+            List<Question> questions = createQuizDTO.getQuestions().stream()
+                    .map(dto -> {
+                        Question question = new Question();
+                        question.setQuestionText(dto.getQuestionText());
+                        return question;
+                    }).collect(Collectors.toList());
+
+            quiz.setQuestions(questions);
 
             quizService.saveQuiz(quiz);
             return ResponseEntity.ok("Quiz created!");
@@ -157,7 +173,7 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
     }
-*/
+
     //denne funker
     @PostMapping("/complete")
     public ResponseEntity<String> completeQuiz(@RequestBody QuizCompleteDTO quizComplete) {
