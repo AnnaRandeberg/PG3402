@@ -9,6 +9,8 @@ import org.quizapp.scoreservice.services.ScoreService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,18 +20,22 @@ public class QuizEventListener {
 
     @RabbitListener(queues = "${amqp.queue.complete.name}")
     public void handleQuizEvent(QuizEventDTO event) {
-        log.info("Received QuizEvent: userId={}, quizId={}, points={}, title={}, subject={}, role={}",
-                event.getUserId(), event.getQuizId(), event.getPoints(), event.getTitle(), event.getSubject(), event.getRole());
+        log.info("Received QuizEvent: {}", event);
 
-        Score score = new Score();
-        score.setUserId(event.getUserId());
-        score.setQuizId(event.getQuizId());
-        score.setPoints(event.getPoints());
-        score.setQuizTitle(event.getTitle());
-        score.setSubject(event.getSubject());
-        score.setRole(event.getRole());
+        try {
+            Score score = new Score();
+            score.setUserId(event.getUserId());
+            score.setQuizId(event.getQuizId());
+            score.setPoints(event.getPoints());
+            score.setQuizTitle(event.getTitle());
+            score.setSubject(event.getSubject());
+            score.setRole(event.getRole());
 
-        scoreService.saveScore(score);
-        log.info("Score saved: {}", score);
+            scoreService.saveScore(score);
+            log.info("Score saved successfully: {}", score);
+        } catch (Exception e) {
+            log.error("Failed to process QuizEvent: {}", e.getMessage());
+        }
     }
+
 }

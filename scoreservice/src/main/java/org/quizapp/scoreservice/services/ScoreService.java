@@ -19,15 +19,8 @@ public class ScoreService {
         return scoreRepository.findAll();
     }
 
-    public Score addScore(Score score) {
-        return scoreRepository.save(score);
-    }
-
-    public void saveScore(Score event) {
-        Score score = new Score();
-        score.setUserId(event.getUserId());
-        score.setQuizId(event.getQuizId());
-        score.setPoints(event.getPoints());
+    public void saveScore(Score score) {
         scoreRepository.save(score);
+        log.info("Score: {}", score);
     }
 }

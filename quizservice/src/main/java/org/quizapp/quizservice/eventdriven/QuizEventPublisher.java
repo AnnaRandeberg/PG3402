@@ -33,7 +33,7 @@ public class QuizEventPublisher {
         event.put("role", quizComplete.getRole());
 
         log.info("Publishing QuizEvent: {}", event);
-        amqpTemplate.convertAndSend("learningApp.exchange", "quiz.complete", event);
+        amqpTemplate.convertAndSend(exchangeName, "quiz.complete", event);
     }
 
 
