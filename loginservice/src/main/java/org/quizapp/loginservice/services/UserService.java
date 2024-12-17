@@ -17,14 +17,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserEventPublisher userPublisher;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public User registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("The email is already in use");
         }
 
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
+        user.setPasswordHash(hashedPassword);
 
         user.setRole("STUDENT");
 
