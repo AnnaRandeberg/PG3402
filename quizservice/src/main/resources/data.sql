@@ -6,8 +6,8 @@ subject VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS questions (
-question_id INT AUTO_INCREMENT PRIMARY KEY,
-quiz_id INT NOT NULL,
+question_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+quiz_id BIGINT NOT NULL,
 question_text VARCHAR(255) NOT NULL,
 answer VARCHAR(255),
 FOREIGN KEY (quiz_id) REFERENCES quiz (quiz_id)

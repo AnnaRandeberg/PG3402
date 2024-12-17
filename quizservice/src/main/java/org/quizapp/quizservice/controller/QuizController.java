@@ -2,10 +2,7 @@ package org.quizapp.quizservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quizapp.quizservice.dtos.QuizCompleteDTO;
-import org.quizapp.quizservice.dtos.QuizDTO;
-import org.quizapp.quizservice.dtos.QuizStartDTO;
-import org.quizapp.quizservice.dtos.UserDTO;
+import org.quizapp.quizservice.dtos.*;
 import org.quizapp.quizservice.eventdriven.UserEventConsumer;
 import org.quizapp.quizservice.model.Quiz;
 import org.quizapp.quizservice.services.QuizService;
@@ -53,54 +50,63 @@ public class QuizController {
 
     @PostMapping("/quizzes/{quizId}/answer")
     public ResponseEntity<?> submitAnswer(
-            @PathVariable int quizId,
-            @RequestBody Map<String, String> answerPayload) {
+            @PathVariable Long quizId,
+            @RequestBody SubmitAnswerDTO submitAnswer) {
 
-        String email = answerPayload.get("email");
-        if (userEventConsumer.isEmailNotRegistered(email)) {
+        if (userEventConsumer.isEmailNotRegistered(submitAnswer.getEmail())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("User not registered.");
-
         }
 
-        String questionId = answerPayload.get("questionId");
-        String answer = answerPayload.get("answer");
-
-        boolean isCorrect = quizService.validateAnswer(quizId, Integer.parseInt(questionId), answer);
+        boolean isCorrect = quizService.validateAnswer(
+                quizId, submitAnswer.getQuestionId(), submitAnswer.getAnswer()
+        );
 
         if (isCorrect) {
             Quiz quiz = quizService.getQuizById(quizId);
             String role;
             try {
-                role = userEventConsumer.getRoleByEmail(email); // Hent rollen dynamisk
+                role = userEventConsumer.getRoleByEmail(submitAnswer.getEmail());
             } catch (IllegalStateException e) {
-                log.error("Role not found for email {}", email);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Role not found for the given user.");
             }
 
-            quizEventPublisher.publishQuizEvent(
-                    Integer.parseInt(answerPayload.get("userId")),
-                    email,
+            int correctAnswers = isCorrect ? 1 : 0;
+            int totalQuestions = 1;
+
+            QuizCompleteDTO quizComplete = new QuizCompleteDTO(
+                    null,
+                    submitAnswer.getEmail(),
                     quizId,
-                    1,
+                    correctAnswers,
+                    totalQuestions,
                     quiz.getTitle(),
                     quiz.getSubject(),
-                    role
+                    role,
+                    submitAnswer.getQuestionId(),
+                    submitAnswer.getAnswer()
             );
 
+
+
+
+            quizEventPublisher.publishQuizEvent(quizComplete);
         }
 
         return ResponseEntity.ok(Map.of(
-                "questionId", questionId,
+                "questionId", submitAnswer.getQuestionId(),
                 "isCorrect", isCorrect
         ));
     }
 
 
+
+
+
     @PostMapping("/quizzes/{quizId}/start")
     public ResponseEntity<?> startQuiz(
-            @PathVariable int quizId,
+            @PathVariable Long quizId,
             @RequestBody Map<String, String> requestBody) {
 
         String email = requestBody.get("email");
@@ -170,16 +176,8 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Role not found for the given user.");
         }
-        quizEventPublisher.publishQuizEvent(
-                quizComplete.getUserId(),
-                quizComplete.getEmail(),
-                quizComplete.getQuizId(),
-                points,
-                quiz.getTitle(),
-                quiz.getSubject(),
-                role
-        );
 
+        quizEventPublisher.publishQuizEvent(quizComplete);
 
         return ResponseEntity.ok("Quiz completed and points published!");
     }
@@ -188,14 +186,14 @@ public class QuizController {
 
     //denne funker
     @GetMapping("/quiz/{id}")
-    public Quiz getQuiz(@PathVariable int id) {
+    public Quiz getQuiz(@PathVariable Long id) {
         return quizService.getQuizById(id);
     }
 
 
     // ikke testet, men denne må fikses på for kun admin kan slette quizzer
     @DeleteMapping("/quiz/{id}")
-    public void deleteQuiz(@PathVariable int id) {
+    public void deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
     }
 

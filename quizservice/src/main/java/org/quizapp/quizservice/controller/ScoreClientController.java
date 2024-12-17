@@ -1,4 +1,4 @@
-package org.quizapp.quizservice.controller;
+/*package org.quizapp.quizservice.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,4 +26,4 @@ public class ScoreClientController {
                 .filter(score -> ((String) ((Map) score).get("userId")).equals(userId))
                 .toList();
     }
-}
+}*/

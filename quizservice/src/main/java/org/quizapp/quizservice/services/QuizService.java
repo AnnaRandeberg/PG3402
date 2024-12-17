@@ -6,22 +6,22 @@ import java.util.List;
 
 public interface QuizService {
 
-    Quiz retrieveQuiz(int quizId);
+    Quiz retrieveQuiz(Long quizId);
 
     Quiz addQuiz(Quiz quiz);
 
     List<Quiz> getAllQuizzes();
 
-    Quiz getQuizById(int quizId);
+    Quiz getQuizById(Long quizId);
 
-    void deleteQuiz(int quizId);
+    void deleteQuiz(Long quizId);
 
 
     void saveQuiz(Quiz quiz);
 
 
-    void trackQuizStart(int quizId, String userId);
+    void trackQuizStart(Long quizId, String userId);
 
-    boolean validateAnswer(int quizId, int questionId, String userAnswer);
+    boolean validateAnswer(Long quizId, Long questionId, String userAnswer);
 
 }

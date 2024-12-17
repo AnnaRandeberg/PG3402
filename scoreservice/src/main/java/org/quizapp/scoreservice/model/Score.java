@@ -18,10 +18,10 @@ public class Score {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int scoreId;
-    private int userId;
+    private Long scoreId;
+    private Long userId;
     private int points;
-    private int quizId;
+    private Long quizId;
 
     private String quizTitle;
     private String subject;

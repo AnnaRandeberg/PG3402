@@ -14,7 +14,7 @@ public class QuizStartDTO {
     @Data
     @AllArgsConstructor
     public static class QuestionDTO {
-        private int questionId;
+        private Long questionId;
         private String questionText;
     }
 }

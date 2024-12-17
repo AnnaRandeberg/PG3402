@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class QuizEventDTO {
-    private int userId;
-    private int quizId;
+    private Long userId;
+    private Long quizId;
     private int points;
     private String title;
     private String subject;

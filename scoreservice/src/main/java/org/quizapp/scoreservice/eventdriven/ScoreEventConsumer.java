@@ -19,30 +19,28 @@ public class ScoreEventConsumer {
 
     @RabbitListener(queues = "${amqp.queue.complete.name}")
     public void handleQuizCompleteEvent(Map<String, Object> event) {
-        log.info("Processing QuizCompleteEvent: {}", event);
+        log.info("Received QuizCompleteEvent: {}", event);
 
-        int userId = (int) event.get("userId");
-        int quizId = (int) event.get("quizId");
-        int points = (int) event.get("score"); // poengsummen kommer fra "score"
-
-        String quizTitle = (String) event.get("title");
+        Long userId = Long.parseLong(event.get("userId").toString());
+        Long quizId = Long.parseLong(event.get("quizId").toString());
+        int points = Integer.parseInt(event.get("points").toString());
+        String title = (String) event.get("title");
         String subject = (String) event.get("subject");
         String role = (String) event.get("role");
 
-        log.info("User {} completed quiz {} with score {}", userId, quizId, points);
+        Score score = new Score();
+        score.setUserId(userId);
+        score.setQuizId(quizId);
+        score.setPoints(points);
+        score.setQuizTitle(title);
+        score.setSubject(subject);
+        score.setRole(role);
 
-        // Oppretter en ny Score-instans og lagrer den
-        Score scoreEntity = new Score();
-        scoreEntity.setUserId(userId);
-        scoreEntity.setQuizId(quizId);
-        scoreEntity.setPoints(points); // Setter poengsummen til "points"
-        scoreEntity.setQuizTitle(quizTitle);
-        scoreEntity.setSubject(subject);
-        scoreEntity.setRole(role);
+        scoreRepository.save(score);
 
-        scoreRepository.save(scoreEntity);
-        log.info("Score saved successfully for user {}", userId);
+        log.info("Score saved for user {} on quiz {} with points {}", userId, quizId, points);
     }
+
 
 
 
