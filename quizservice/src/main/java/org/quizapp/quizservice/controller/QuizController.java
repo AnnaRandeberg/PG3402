@@ -53,24 +53,44 @@ public class QuizController {
 
     @PostMapping("/quizzes/{quizId}/answer")
     public ResponseEntity<?> submitAnswer(
-            @PathVariable Long quizId,
-            @RequestParam String email, // Endret til email
+            @PathVariable int quizId,
             @RequestBody Map<String, String> answerPayload) {
 
-        if (!userEventConsumer.isEmailRegistered(email)) {
+        String email = answerPayload.get("email");
+        if (userEventConsumer.isEmailNotRegistered(email)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("User not registered. Please register to submit an answer.");
+                    .body("User not registered.");
+
         }
 
         String questionId = answerPayload.get("questionId");
         String answer = answerPayload.get("answer");
 
-        boolean isCorrect = quizService.validateAnswer(quizId, Long.parseLong(questionId), answer);
+        boolean isCorrect = quizService.validateAnswer(quizId, Integer.parseInt(questionId), answer);
 
         if (isCorrect) {
-            // Publiser en hendelse til RabbitMQ
-            quizEventPublisher.publishQuizEvent(email, quizId, 1);
+            Quiz quiz = quizService.getQuizById(quizId);
+            String role;
+            try {
+                role = userEventConsumer.getRoleByEmail(email); // Hent rollen dynamisk
+            } catch (IllegalStateException e) {
+                log.error("Role not found for email {}", email);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Role not found for the given user.");
+            }
+
+            quizEventPublisher.publishQuizEvent(
+                    Integer.parseInt(answerPayload.get("userId")),
+                    email,
+                    quizId,
+                    1,
+                    quiz.getTitle(),
+                    quiz.getSubject(),
+                    role
+            );
+
         }
+
         return ResponseEntity.ok(Map.of(
                 "questionId", questionId,
                 "isCorrect", isCorrect
@@ -79,11 +99,14 @@ public class QuizController {
 
 
     @PostMapping("/quizzes/{quizId}/start")
-    public ResponseEntity<?> startQuiz(@PathVariable Long quizId, @RequestParam String email) {
-        // Sjekk om brukeren er registrert (RabbitMQ data)
-        if (!userEventConsumer.isEmailRegistered(email)) {
+    public ResponseEntity<?> startQuiz(
+            @PathVariable int quizId,
+            @RequestBody Map<String, String> requestBody) {
+
+        String email = requestBody.get("email");
+        if (userEventConsumer.isEmailNotRegistered(email)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("User not registered. Please register to start a quiz.");
+                    .body("User not registered.");
         }
 
         Quiz quiz = quizService.getQuizById(quizId);
@@ -140,7 +163,23 @@ public class QuizController {
         }
 
         int points = (quizComplete.getCorrectAnswers() * 100) / quizComplete.getTotalQuestions();
-        quizEventPublisher.publishQuizEvent(quizComplete.getUserId(), quizComplete.getQuizId(), points);
+        String role;
+        try {
+            role = userEventConsumer.getRoleByEmail(quizComplete.getEmail());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Role not found for the given user.");
+        }
+        quizEventPublisher.publishQuizEvent(
+                quizComplete.getUserId(),
+                quizComplete.getEmail(),
+                quizComplete.getQuizId(),
+                points,
+                quiz.getTitle(),
+                quiz.getSubject(),
+                role
+        );
+
 
         return ResponseEntity.ok("Quiz completed and points published!");
     }
@@ -149,14 +188,14 @@ public class QuizController {
 
     //denne funker
     @GetMapping("/quiz/{id}")
-    public Quiz getQuiz(@PathVariable Long id) {
+    public Quiz getQuiz(@PathVariable int id) {
         return quizService.getQuizById(id);
     }
 
 
     // ikke testet, men denne må fikses på for kun admin kan slette quizzer
     @DeleteMapping("/quiz/{id}")
-    public void deleteQuiz(@PathVariable Long id) {
+    public void deleteQuiz(@PathVariable int id) {
         quizService.deleteQuiz(id);
     }
 

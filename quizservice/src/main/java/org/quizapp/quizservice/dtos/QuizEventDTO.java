@@ -1,4 +1,5 @@
-package org.quizapp.scoreservice.dtos;
+package org.quizapp.quizservice.dtos;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,4 +17,3 @@ public class QuizEventDTO {
     private String role;
 
 }
-

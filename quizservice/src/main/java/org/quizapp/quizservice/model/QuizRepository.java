@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-public interface QuizRepository extends CrudRepository<Quiz, Long> {
+public interface QuizRepository extends CrudRepository<Quiz, Integer> {
 
-    Optional<Quiz> findById(Long id);
+    Optional<Quiz> findByQuizId(int quizId);
+
 }

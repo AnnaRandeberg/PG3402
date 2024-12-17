@@ -8,13 +8,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class QuizStartDTO {
-    private String quizTitle; // Tittel på quizen
-    private List<QuestionDTO> questions; // Liste over spørsmål
+    private String quizTitle;
+    private List<QuestionDTO> questions;
 
     @Data
     @AllArgsConstructor
     public static class QuestionDTO {
-        private Long questionId;       // ID for spørsmålet
-        private String questionText;   // Selve spørsmålet
+        private int questionId;
+        private String questionText;
     }
 }

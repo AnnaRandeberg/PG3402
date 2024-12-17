@@ -21,7 +21,7 @@ public class QuizServiceImpl implements QuizService {
     private final QuizEventPublisher quizEventPublisher;
 
     @Override
-    public Quiz retrieveQuiz(Long quizId) {
+    public Quiz retrieveQuiz(int quizId) {
         return quizRepository.findById(quizId).orElse(null);
     }
 
@@ -49,7 +49,7 @@ public class QuizServiceImpl implements QuizService {
         return savedQuiz;
     }
 
-    public void trackQuizStart(Long quizId, String userId) {
+    public void trackQuizStart(int quizId, String userId) {
         Quiz quiz = getQuizById(quizId);
         if (quiz == null) {
             throw new IllegalArgumentException("Quiz not found with ID: " + quizId);
@@ -66,12 +66,12 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public Quiz getQuizById(Long quizId) {
+    public Quiz getQuizById(int quizId) {
         return quizRepository.findById(quizId).orElse(null);
     }
 
     @Override
-    public void deleteQuiz(Long quizId) {
+    public void deleteQuiz(int quizId) {
         quizRepository.deleteById(quizId);
     }
 
@@ -83,7 +83,7 @@ public class QuizServiceImpl implements QuizService {
         quizRepository.save(quiz);
     }
 
-    public boolean validateAnswer(Long quizId, Long questionId, String userAnswer) {
+    public boolean validateAnswer(int quizId, int questionId, String userAnswer) {
         Quiz quiz = getQuizById(quizId);
         if (quiz == null) return false;
 

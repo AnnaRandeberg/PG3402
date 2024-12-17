@@ -1,11 +1,14 @@
 package org.quizapp.quizservice.dtos;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value
+@Getter
+@Setter
 public class QuizCompleteDTO {
-    String userId;
-    Long quizId;
-    int correctAnswers;
-    int totalQuestions;
+    private int userId;
+    private String email;
+    private int quizId;
+    private int correctAnswers;
+    private int totalQuestions;
 }

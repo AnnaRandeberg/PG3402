@@ -2,7 +2,6 @@ package org.quizapp.scoreservice.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quizapp.scoreservice.dtos.QuizEventDTO;
 import org.quizapp.scoreservice.model.Score;
 import org.quizapp.scoreservice.repository.ScoreRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class ScoreService {
         return scoreRepository.save(score);
     }
 
-    public void saveScore(QuizEventDTO event) {
+    public void saveScore(Score event) {
         Score score = new Score();
         score.setUserId(event.getUserId());
         score.setQuizId(event.getQuizId());

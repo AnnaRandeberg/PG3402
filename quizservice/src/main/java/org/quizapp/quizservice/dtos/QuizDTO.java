@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class QuizDTO {
-    private Long quizId;
+    private int quizId;
     private String title;
     private String chapter;
     private String subject;

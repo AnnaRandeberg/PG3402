@@ -10,17 +10,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.Setter;
-
+@Getter
+@Setter
 @Entity
 @Data
 public class Score {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scoreId;
-    private String userId;
+    private int scoreId;
+    private int userId;
     private int points;
-    private Long quizId;
+    private int quizId;
+
+    private String quizTitle;
+    private String subject;
+    private String role;
 
     /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false)
