@@ -14,7 +14,7 @@ SELECT 'admin@gmail.com', 'secret', 'Admin', 'User', 'ADMIN'
 );
 
 INSERT INTO users (email, password_hash, first_name, last_name, role)
-SELECT 'lisa@student.com', 'secret123', 'lisa', 'lo', 'STUDENT'
+SELECT 'lisa@student.com', 'secret123', 'Lisa', 'Lo', 'STUDENT'
     WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE email = 'lisa@student.com'
 );
