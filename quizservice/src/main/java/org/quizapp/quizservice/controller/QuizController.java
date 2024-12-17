@@ -51,7 +51,7 @@ public class QuizController {
 
 
 
-    @PostMapping("/quizzes/{quizId}/answer")
+   /* @PostMapping("/quizzes/{quizId}/answer")
     public ResponseEntity<?> submitAnswer(
             @PathVariable Long quizId,
             @RequestParam String email, // Endret til email
@@ -105,7 +105,7 @@ public class QuizController {
 
         return ResponseEntity.ok(response);
     }
-
+*/
 
    /* @PostMapping("/quiz")
     public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
@@ -113,6 +113,63 @@ public class QuizController {
         return ResponseEntity.ok(savedQuiz);
     }*/
 
+
+    @PostMapping("/quizzes/{quizId}/answer")
+    public ResponseEntity<?> submitAnswer(
+            @PathVariable Long quizId,
+            @RequestBody Map<String, String> answerPayload) {
+
+        String email = answerPayload.get("email");
+        if (userEventConsumer.isEmailNotRegistered(email)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("User not registered.");
+
+    }
+
+        String questionId = answerPayload.get("questionId");
+        String answer = answerPayload.get("answer");
+
+        boolean isCorrect = quizService.validateAnswer(quizId, Long.parseLong(questionId), answer);
+
+        if (isCorrect) {
+            quizEventPublisher.publishQuizEvent(email, quizId, 1);
+        }
+        return ResponseEntity.ok(Map.of(
+                "questionId", questionId,
+                "isCorrect", isCorrect
+        ));
+    }
+
+    @PostMapping("/quizzes/{quizId}/start")
+    public ResponseEntity<?> startQuiz(
+            @PathVariable Long quizId,
+            @RequestBody Map<String, String> requestBody) {
+
+        String email = requestBody.get("email");
+        if (userEventConsumer.isEmailNotRegistered(email)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("User not registered.");
+        }
+
+        Quiz quiz = quizService.getQuizById(quizId);
+        if (quiz == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Quiz not found");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("quizId", quiz.getQuizId());
+        response.put("title", quiz.getTitle());
+        response.put("chapter", quiz.getChapter());
+        response.put("subject", quiz.getSubject());
+        response.put("questions", quiz.getQuestions().stream()
+                .map(question -> Map.of(
+                        "questionId", question.getId(),
+                        "questionText", question.getQuestionText()
+                ))
+                .toList());
+
+        return ResponseEntity.ok(response);
+    }
     //denne funker ikke
     // Opprett quiz kun hvis bruker er ADMIN
     @PostMapping
