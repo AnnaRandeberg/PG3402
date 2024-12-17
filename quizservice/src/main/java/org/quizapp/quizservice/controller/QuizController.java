@@ -75,8 +75,10 @@ public class QuizController {
             int correctAnswers = isCorrect ? 1 : 0;
             int totalQuestions = 1;
 
+            Long userId = userEventConsumer.getUserIdByEmail(submitAnswer.getEmail());
+
             QuizCompleteDTO quizComplete = new QuizCompleteDTO(
-                    null,
+                    userId,
                     submitAnswer.getEmail(),
                     quizId,
                     correctAnswers,
@@ -87,10 +89,7 @@ public class QuizController {
                     submitAnswer.getQuestionId(),
                     submitAnswer.getAnswer()
             );
-
-
-
-
+            quizComplete.setUserId(userEventConsumer.getUserIdByEmail(submitAnswer.getEmail()));
             quizEventPublisher.publishQuizEvent(quizComplete);
         }
 

@@ -14,16 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserEventConsumer {
 
     private final Map<String, String> userRoles = new ConcurrentHashMap<>();
+    private final Map<String, Long> userIds = new ConcurrentHashMap<>();
 
     @RabbitListener(queues = "${amqp.queue.user.name}")
     public void handleUserCreatedEvent(Map<String, Object> event) {
         log.info("Received event: {}", event);
         String email = (String) event.get("email");
         String role = (String) event.get("role");
-
-        if (email != null && role != null) {
+        Long userId = Long.parseLong(event.get("userId").toString());
+        if (email != null && role != null && userId != null) {
+            userIds.put(email, userId);
             userRoles.put(email, role);
-            log.info("Stored user role for email {}: {}", email, role);
+            log.info("Stored userId: {} and role: {} for email: {}", userId, role, email);
         } else {
             log.warn("Invalid UserCreatedEvent: {}", event);
         }
@@ -37,6 +39,10 @@ public class UserEventConsumer {
             throw new IllegalStateException("Role not found for email: " + email);
         }
         return role;
+    }
+
+    public Long getUserIdByEmail(String email) {
+        return userIds.getOrDefault(email, null);
     }
 
 
