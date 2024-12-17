@@ -5,6 +5,7 @@ import org.quizapp.loginservice.eventdriven.UserEventPublisher;
 import org.quizapp.loginservice.model.User;
 import org.quizapp.loginservice.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserEventPublisher userPublisher;
+    /*private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();*/
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public User registerUser(User user) {
+   /*public User registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("The email is already in use");
         }
@@ -33,9 +34,9 @@ public class UserService {
         userPublisher.publishUserCreatedEvent(savedUser);
 
         return savedUser;
-    }
+    }*/
 
-    public Optional<User> loginUser(String email, String password) {
+    /*public Optional<User> loginUser(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
@@ -52,8 +53,53 @@ public class UserService {
             System.out.println("User not found for email: " + email);
         }
         return Optional.empty();
+    }*/
+
+
+
+    public User registerUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("The email is already in use");
+        }
+
+        user.setPasswordHash(user.getPasswordHash());
+        user.setRole("STUDENT");
+
+        User savedUser = userRepository.save(user);
+
+        userPublisher.publishUserCreatedEvent(savedUser);
+
+        return savedUser;
     }
 
+
+    public Optional<User> loginUser(String email, String rawPassword) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            // Sjekk passord uten kryptering (klartekst sammenligning)
+            if (rawPassword.equals(user.get().getPasswordHash())) {
+                return user;
+            } else {
+                System.out.println("Password does not match.");
+            }
+        } else {
+            System.out.println("User not found for email: " + email);
+        }
+        return Optional.empty();
+    }
+
+
+  /*  public Optional<User> loginUser(String email, String rawPassword) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent() && passwordEncoder.matches(rawPassword, user.get().getPasswordHash())) {
+            return user;
+        }
+        return Optional.empty();
+    }*/
+
+    public boolean existsByEmail(String email) {
+      return userRepository.existsByEmail(email); // Sjekker i databasen
+  }
 
     public List<User> searchUsersByFirstAndLastName(String firstName, String lastName) {
         return userRepository.findByFirstNameAndLastName(firstName, lastName);

@@ -29,9 +29,9 @@ public class QuizEventPublisher {
                 "quizId", quizId,
                 "points", points
         );
-        String routingKey = "quiz.complete";
-        log.info("Publishing QuizEvent: {}", event);
-        amqpTemplate.convertAndSend(exchangeName, routingKey, event);
+
+        log.info("Publishing QuizEvent: {}", event); // Legg til for debugging
+        amqpTemplate.convertAndSend(exchangeName, "quiz.complete", event);
     }
 }
 

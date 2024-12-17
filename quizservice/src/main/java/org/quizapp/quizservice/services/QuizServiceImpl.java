@@ -49,6 +49,16 @@ public class QuizServiceImpl implements QuizService {
         return savedQuiz;
     }
 
+    public void trackQuizStart(Long quizId, String userId) {
+        Quiz quiz = getQuizById(quizId);
+        if (quiz == null) {
+            throw new IllegalArgumentException("Quiz not found with ID: " + quizId);
+        }
+
+        log.info("User {} started quiz with ID {}", userId, quizId);
+
+    }
+
 
     @Override
     public List<Quiz> getAllQuizzes() {
@@ -72,5 +82,14 @@ public class QuizServiceImpl implements QuizService {
         }
         quizRepository.save(quiz);
     }
+
+    public boolean validateAnswer(Long quizId, Long questionId, String userAnswer) {
+        Quiz quiz = getQuizById(quizId);
+        if (quiz == null) return false;
+
+        return quiz.getQuestions().stream()
+                .anyMatch(q -> q.getId().equals(questionId) && q.getAnswer().equalsIgnoreCase(userAnswer));
+    }
+
 
 }

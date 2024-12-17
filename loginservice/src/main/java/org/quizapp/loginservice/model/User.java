@@ -19,7 +19,7 @@ public class User {
     private String email;
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Column(nullable = false)

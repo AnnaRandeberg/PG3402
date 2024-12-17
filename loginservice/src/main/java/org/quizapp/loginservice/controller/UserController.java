@@ -23,6 +23,18 @@ public class UserController {
     private final UserService userService;
     private final FlashcardClient flashcardClient;
 
+
+
+    @GetMapping("/exists")
+    public ResponseEntity<?> checkUserExists(@RequestParam String email) {
+        boolean userExists = userService.existsByEmail(email);
+        if (!userExists) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
     //denne funker
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRequest) {

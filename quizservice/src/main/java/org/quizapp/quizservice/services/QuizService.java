@@ -20,4 +20,8 @@ public interface QuizService {
     void saveQuiz(Quiz quiz);
 
 
+    void trackQuizStart(Long quizId, String userId);
+
+    boolean validateAnswer(Long quizId, Long questionId, String userAnswer);
+
 }
