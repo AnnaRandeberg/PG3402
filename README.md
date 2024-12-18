@@ -1,5 +1,15 @@
 # LearningApp: Microservices-Based Quiz Application
 
+## Github link: [https://github.com/AnnaRandeberg/PG3402](https://github.com/AnnaRandeberg/PG3402)
+
+## Introduction
+
+The goal of this project is to create a user-friendly learning app designed for middle school students. We've all experienced how reading school textbooks can sometimes feel boring, and it can be difficult to keep track of multiple subjects and curriculum demands. As the curriculum grows more challenging, our aim is to make learning easier and more enjoyable for the next generation.
+
+Our solution is to turn learning into a fun, game-like experience. The app will feature quizzes subjects, with users receiving scores for each quiz. A leaderboard will allow students to compete with classmates, adding a layer of friendly competition that can be a strong motivator. Additionally, users will have access to making flashcards. 
+
+This project leverages microservice architecture to provide scalability, maintainability and flexibility for future enhancements. Key components include services for managing quizzes, scores, user authentication and flashcards, with RabbitMQ handling asynchronous communication and Consul ensuring service discovery.
+
 ## **How to Run the Project**
 
 ### **1. Build the Project**
@@ -61,7 +71,7 @@ Communication types:
 - Synchronous communication: REST calls via Gateway.  
 - Asynchronous communication: RabbitMQ for message passing.  
 
-![System Architecture](link-to-architecture-diagram)  
+![System Architecture](pg3402-Exam-microservicesDiagram.png)  
 
 ---
 
