@@ -12,7 +12,6 @@ public class CreateQuizDTO {
     private String title;
     private String chapter;
     private String subject;
-    /*private List<QuizStartDTO.QuestionDTO> questions;*/
     private List<CreateQuestionDTO> questions;
 
 

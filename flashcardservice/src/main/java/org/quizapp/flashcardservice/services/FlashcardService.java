@@ -36,7 +36,7 @@ public class FlashcardService {
 
         List<FlashcardDTO> flashcards = new ArrayList<>();
         quiz.getQuestions().forEach(q ->
-                flashcards.add(new FlashcardDTO(q.getQuestionText(), q.getAnswer()))
+                flashcards.add(new FlashcardDTO(q.getQuestionText(), q.getCorrectAnswer()))
         );
 
         return flashcards;

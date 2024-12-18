@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class QuestionDTO {
     private String questionText;
-    private String answer;
+    private String correctAnswer;
 }
 
