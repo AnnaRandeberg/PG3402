@@ -10,12 +10,7 @@ import org.quizapp.quizservice.services.QuizService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.quizapp.quizservice.eventdriven.QuizEventPublisher;
-import org.quizapp.quizservice.model.QuizComplete;
-
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +26,6 @@ public class QuizController {
     private final QuizEventPublisher quizEventPublisher;
     private final UserEventConsumer userEventConsumer;
 
-  /*  //denne funker
-    @GetMapping("/quiz")
-    public List<Quiz> getQuizzes() {
-        return quizService.getAllQuizzes();
-    }*/
 
     @GetMapping
     public List<QuizDTO> getQuizzes() {
@@ -49,8 +39,7 @@ public class QuizController {
     }
 
 
-
-    @PostMapping("/quizzes/{quizId}/answer")
+    @PostMapping("/{quizId}/answer")
     public ResponseEntity<?> submitAnswer(
             @PathVariable Long quizId,
             @RequestBody SubmitAnswerDTO submitAnswer) {
@@ -102,10 +91,7 @@ public class QuizController {
     }
 
 
-
-
-
-    @PostMapping("/quizzes/{quizId}/start")
+    @PostMapping("/{quizId}/start")
     public ResponseEntity<?> startQuiz(
             @PathVariable Long quizId,
             @RequestBody Map<String, String> requestBody) {
@@ -137,14 +123,8 @@ public class QuizController {
     }
 
 
-   /* @PostMapping("/quiz")
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        Quiz savedQuiz = quizService.addQuiz(quiz);
-        return ResponseEntity.ok(savedQuiz);
-    }*/
-
    //denne funker
-    // Opprett quiz kun hvis bruker er ADMIN
+    // Oppretter en quiz kun hvis bruker har admin mailen
     @PostMapping
     public ResponseEntity<String> createQuiz(@RequestBody CreateQuizDTO createQuizDTO) {
         try {
@@ -162,6 +142,7 @@ public class QuizController {
                     .map(dto -> {
                         Question question = new Question();
                         question.setQuestionText(dto.getQuestionText());
+                        question.setCorrectAnswer(dto.getCorrectAnswer());
                         return question;
                     }).collect(Collectors.toList());
 
@@ -174,48 +155,12 @@ public class QuizController {
         }
     }
 
-    //denne funker
-    @PostMapping("/complete")
-    public ResponseEntity<String> completeQuiz(@RequestBody QuizCompleteDTO quizComplete) {
-        Quiz quiz = quizService.getQuizById(quizComplete.getQuizId());
-        if (quiz == null) {
-            return ResponseEntity.badRequest().body("Quiz not found");
-        }
-
-        int points = (quizComplete.getCorrectAnswers() * 100) / quizComplete.getTotalQuestions();
-        String role;
-        try {
-            role = userEventConsumer.getRoleByEmail(quizComplete.getEmail());
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Role not found for the given user.");
-        }
-
-        quizEventPublisher.publishQuizEvent(quizComplete);
-
-        return ResponseEntity.ok("Quiz completed and points published!");
-    }
-
-
 
     //denne funker
     @GetMapping("/quiz/{id}")
     public Quiz getQuiz(@PathVariable Long id) {
         return quizService.getQuizById(id);
     }
-
-
-    // ikke testet, men denne må fikses på for kun admin kan slette quizzer
-    @DeleteMapping("/quiz/{id}")
-    public void deleteQuiz(@PathVariable Long id) {
-        quizService.deleteQuiz(id);
-    }
-
-    private UserDTO getUserDTO(String email) {
-        UserDTO userDTO = new UserDTO(email, "ADMIN");
-        return userDTO;
-    }
-
 
 
 }
