@@ -14,6 +14,6 @@ public class QuizEventDTO {
     private String title;
     private String subject;
     private String role;
-
+    private String email;
 }
 
