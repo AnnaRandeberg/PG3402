@@ -20,7 +20,7 @@ mvn clean install
 ```
 
 ### **2. Start the Project**
-Once all services are built, navigate to the `pg3402/docker` folder and run the following commands:
+Once all services are built, navigate to the `pg3402/docker` folder and run the following commands (ps remember to have Docker Dekstop running in the background):
 
 ```bash
 docker-compose down
@@ -123,7 +123,7 @@ Below is a list of user stories that allow an examiner to assess the functionali
 
 - **Search for a Specific User**  
   Method: `GET`  
-  URL: `http://localhost:8084/api/users/search/kally/kai`
+  URL: `http://localhost:8084/api/users/search/Kally/Kai`
 
 **Description:** Users can view all registered users or search for specific friends using their first and last name. Sensitive information remains protected, as only non-critical data is displayed.
 
