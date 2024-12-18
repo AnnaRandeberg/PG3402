@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-
+ //tror ikke denne filen brukes?
 @Service
 public class FlashcardClient {
 

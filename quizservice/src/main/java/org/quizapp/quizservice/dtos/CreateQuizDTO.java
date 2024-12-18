@@ -12,12 +12,15 @@ public class CreateQuizDTO {
     private String title;
     private String chapter;
     private String subject;
-    private List<QuizStartDTO.QuestionDTO> questions;
+    /*private List<QuizStartDTO.QuestionDTO> questions;*/
+    private List<CreateQuestionDTO> questions;
+
 
     @Getter
     @Setter
-    public static class QuestionDTO {
+    public static class CreateQuestionDTO {
         private Long questionId;
         private String questionText;
+        private String correctAnswer;
     }
 }
