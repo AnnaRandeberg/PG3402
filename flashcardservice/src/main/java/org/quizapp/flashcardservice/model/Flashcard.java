@@ -10,5 +10,5 @@ public class Flashcard {
     private Long flashcardId;
 
     private String questionText;
-    private String answer;
+    private String correctAnswer;
 }

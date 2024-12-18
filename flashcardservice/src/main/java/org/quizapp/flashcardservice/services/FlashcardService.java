@@ -31,12 +31,12 @@ public class FlashcardService {
         QuizDTO quiz = restTemplate.getForObject(quizServiceUrl + "/" + quizId, QuizDTO.class);
 
         if (quiz == null || quiz.getQuestions() == null) {
-            return new ArrayList<>(); // Returner tom liste ved feil
+            return new ArrayList<>();
         }
 
         List<FlashcardDTO> flashcards = new ArrayList<>();
         quiz.getQuestions().forEach(q ->
-                flashcards.add(new FlashcardDTO(q.getQuestionText(), q.getAnswer()))
+                flashcards.add(new FlashcardDTO(q.getQuestionText(), q.getCorrectAnswer()))
         );
 
         return flashcards;
