@@ -19,6 +19,10 @@ public class ScoreService {
         return scoreRepository.findAll();
     }
 
+    public List<Score> getScoresByEmail(String email) {
+        log.info("Fetching scores for email: {}", email);
+        return scoreRepository.findByEmail(email);
+    }
     public void saveScore(Score score) {
         scoreRepository.save(score);
         log.info("Score: {}", score);
