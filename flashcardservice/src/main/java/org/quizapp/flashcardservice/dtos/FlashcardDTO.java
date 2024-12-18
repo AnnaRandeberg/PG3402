@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FlashcardDTO {
     private String questionText;
-    private String answer;
+    private String correctAnswer;
 }
