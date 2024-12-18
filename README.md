@@ -250,4 +250,44 @@ Below is a list of user stories that allow an examiner to assess the functionali
 
   **Description:** Retrieves all existing flashcards created by users.  
   
- 
+## **Why Microservices?**
+Our project is well-suited for a microservices architecture because it addresses many challenges while making the system scalable and flexible. A monolithic architecture would not be ideal, as our system is divided into multiple services with a clear separation of responsibilities.
+
+- **Scalability:** If the QuizService experiences heavy traffic, it can be scaled independently without affecting other services.
+- **Maintainability:** Each service handles a specific functionality, making the code organized and easier to maintain.
+- **Resilience:** Errors in one service do not affect the entire application, improving system robustness.
+- **Collaboration:** With two developers working on this project, microservices allowed us to work on different services simultaneously without interfering with each other or the overall system.
+
+---
+
+### **Technology Choices**
+For the database, we initially used Flyway for database migrations, as we had learned it in our backend programming course. However, we encountered numerous issues due to migration file conflicts. To avoid these conflicts and simplify database management, we switched to Spring Boot's built-in database initialization using `data.sql`. This approach provided better control and reduced complexity in our project.
+
+### **Communication in the System**
+1. **Synchronous Communication (REST Calls):**
+   - **FlashcardService → QuizService:** FlashcardService retrieves quiz data from QuizService using `RestTemplate` to make direct HTTP calls.
+   - **API Gateway → All Services:** The API Gateway forwards incoming REST requests to the appropriate microservices using Spring Cloud Gateway.
+
+2. **Asynchronous Communication (RabbitMQ):**
+   - **LoginService → RabbitMQ:** When a new user is created, a `UserCreatedEvent` is published to the `user.queue`.
+   - **QuizService → RabbitMQ:** After a quiz is completed, a `QuizCompleteEvent` is published to the `quiz.complete` queue.
+   - **ScoreService ← RabbitMQ:** ScoreService listens to the `quiz.complete` queue to update user scores accordingly.
+
+---
+
+### **Division of Work**
+- **Candidate 81:** Responsible for FlashcardService and QuizService.
+- **Candidate 70:** Responsible for ScoreService and LoginService.
+- **Docker and Gateway:** Shared responsibilities.
+
+  Additionally, we used a lot of pair programming to solve problems, ensuring both of us 
+  contributed to all services equally. Each of us took responsibility for 50% of the workload, 
+  with a strong emphasis on collaboration to ensure that we were both actively involved in all 
+  parts of the project.
+---
+
+### **References**
+- **Data Initialization:** [Spring Boot - data.sql](https://www.baeldung.com/spring-boot-data-sql-and-schema-sql#thedatasqlfile)
+- **Microservice Diagram Creation:** [Kroki.io](https://kroki.io/)
+- **Project Inspiration:** [Bogdan Marculescu's Microservices Project](https://github.com/bogdanmarculescu/microservices2024)
+
