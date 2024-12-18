@@ -76,11 +76,14 @@ Communication types:
 ---
 
 ## **User Stories and API Endpoints**
-Below is a list of functionalities and how to test them using Postman:
+Below is a list of user stories that allow an examiner to assess the functionality developed in the project. These user stories represent key scenarios that demonstrate the features implemented in the application. Can be used on postman.
 
-### **1. Login/Registration**
-**Scenario:** As a student, I want to register and log in to access the app.
+---
 
+### **1. User Story: Login/Register**
+**As a middle school student,**  
+**I want to register/login,**  
+**So I can take quizzes and access the learning app.**
 - **Register**  
   Method: `POST`  
   URL: `http://localhost:8084/api/users/register`  
@@ -89,8 +92,8 @@ Below is a list of functionalities and how to test them using Postman:
   {
       "email": "kally@gmail.com",
       "rawPassword": "secret123",
-      "firstName": "kally",
-      "lastName": "kai"
+      "firstName": "Kally",
+      "lastName": "Kai"
   }
   ```
 
@@ -104,11 +107,15 @@ Below is a list of functionalities and how to test them using Postman:
       "rawPassword": "secret123"
   }
   ```
+  
+**Description:** Users can register and log in using a secure process. Passwords are hashed to ensure data security and prevent plaintext storage in the database.
 
 ---
 
 ### **2. Connect with Friends**
-**Scenario:** As a user, I want to connect with friends to view and compare scores.
+**As a user of the learning app,**  
+**I want to link with friends,**  
+**So I can see their quiz scores, compare progress, and motivate each other to improve.**
 
 - **View All Users**  
   Method: `GET`  
@@ -118,10 +125,14 @@ Below is a list of functionalities and how to test them using Postman:
   Method: `GET`  
   URL: `http://localhost:8084/api/users/search/kally/kai`
 
+**Description:** Users can view all registered users or search for specific friends using their first and last name. Sensitive information remains protected, as only non-critical data is displayed.
+
 ---
 
 ### **3. Take Quiz**
-**Scenario:** As a student, I want to take quizzes and receive feedback on my answers.
+**As a middle school student,**  
+**I want to take quizzes for various subjects and topics,**  
+**So that I can learn different subjects in a more engaging way and track my progress.**
 
 - **View All Available Quizzes**  
   Method: `GET`  
@@ -149,10 +160,14 @@ Below is a list of functionalities and how to test them using Postman:
   }
   ```
 
+**Description:** Students can view available quizzes, search for quizzes by ID, and submit answers. The system provides immediate feedback.
+
 ---
 
 ### **4. Admin - Create Quiz**
-**Scenario:** As an admin, I want to create quizzes for students.
+**As an admin,**  
+**I want to create quizzes,**  
+**So that students can take them and test their knowledge.**
 
 - **Create Quiz**  
   Method: `POST`  
@@ -178,10 +193,14 @@ Below is a list of functionalities and how to test them using Postman:
   Method: `GET`  
   URL: `http://localhost:8081/quizapi/quiz/1`
 
+**Description:** Only users with the admin email (`admin@gmail.com`) can create new quizzes. Unauthorized users are denied access.
+
 ---
 
 ### **5. View Scores**
-**Scenario:** As a student, I want to view my own and others' quiz scores.
+**As a student,**  
+**I want to see my quiz scores,**  
+**So I can understand my performance and track my progress.**
 
 - **View Scores for All Users**  
   Method: `GET`  
@@ -196,91 +215,39 @@ Below is a list of functionalities and how to test them using Postman:
     "email": "kally@gmail.com"
   }
   ```
+
+  **Description:** Users can view their quiz scores and compare progress with others.
+
+---
+
+### **6. User Story: Flashcards**
+**As a user,**  
+**I want to practice for my quizzes using flashcards,**  
+**So that I can improve my scores.**
+
+- **See Flashcards for a Specific Quiz**  
+  Method: `GET`  
+  URL: `http://localhost:8087/flashcards/quiz/1`  
+
+  **Description:** By integrating with the QuizService, users can fetch flashcards directly tied to quizzes. This promotes seamless interaction between services and demonstrates RESTful communication.
+
+- **Create a Flashcard**  
+  Method: `POST`  
+  URL: `http://localhost:8087/flashcards`  
+  Body:  
+  ```json
+  {
+    "questionText": "Hva er 5 + 3?",
+    "answer": "8"
+  }
+  ```
+
+  **Description:** This functionality allows users to create their own flashcards, similar to how they would in real life when studying. It supports personalized learning and adds interactivity to the application.
+
+- **Retrieve All Flashcards**  
+  Method: `GET`  
+  URL: `http://localhost:8087/flashcards`  
+
+  **Description:** Retrieves all existing flashcards created by users.  
   
-## Other API Endpoints
-
-In addition to the user stories, we have chosen to include the following API endpoints to provide essential functionality for the FlashcardService. These endpoints allow users to create, retrieve, and interact with flashcards, as well as fetch flashcards associated with a quiz.
-
----
-
-### **1. Create a Flashcard**
-- **Method:** `POST`
-- **URL:** `/flashcards`
-- **Description:** Allows users to create their own flashcards, mimicking the real-life process of creating study cards.
-- **Request Body:**
-    ```json
-    {
-      "questionText": "What is 5 + 3?",
-      "answer": "8"
-    }
-    ```
-- **Response:**
-    ```json
-    {
-      "flashcardId": 1,
-      "questionText": "What is 5 + 3?",
-      "answer": "8"
-    }
-    ```
-
----
-
-### **2. Retrieve All Flashcards**
-- **Method:** `GET`
-- **URL:** `/flashcards`
-- **Description:** Retrieves all existing flashcards created by users.
-- **Response Example:**
-    ```json
-    [
-      {
-        "flashcardId": 1,
-        "questionText": "What is 5 + 3?",
-        "answer": "8"
-      },
-      {
-        "flashcardId": 2,
-        "questionText": "What is the capital of France?",
-        "answer": "Paris"
-      }
-    ]
-    ```
-
----
-
-### **3. Retrieve Flashcards from a Quiz**
-- **Method:** `GET`
-- **URL:** `/flashcards/quiz/{id}`
-- **Description:** Fetches flashcards related to a specific quiz by its ID. This endpoint relies on REST communication with the QuizService.
-- **Example Request:** `GET /flashcards/quiz/1`
-- **Response Example:**
-    ```json
-    {
-      "quizId": 1,
-      "title": "Matte 8. klasse",
-      "questions": [
-        {
-          "questionText": "What is 2 + 2?",
-          "answer": "4"
-        },
-        {
-          "questionText": "What is 3 * 3?",
-          "answer": "9"
-        }
-      ]
-    }
-    ```
-
----
-
-We included these endpoints to enhance the usability and flexibility of the FlashcardService. Specifically:
-
-1. **Creating Flashcards (POST):**
-   - This functionality allows users to create their own flashcards, similar to how they would in real life when studying. It supports personalized learning and adds interactivity to the application.
-
-2. **Retrieving Flashcards (GET):**
-   - Users can retrieve their created flashcards at any time, enabling easy access to study materials.
-
-3. **Fetching Flashcards from a Quiz (GET /quiz/{id}):**
-   - By integrating with the QuizService, users can fetch flashcards directly tied to quizzes. This promotes seamless interaction between services and demonstrates RESTful communication.
-
-These features ensure that the FlashcardService is practical, user-friendly, and connected to the broader system architecture, allowing for both manual and automated flashcard management.
+ 
