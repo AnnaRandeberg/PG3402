@@ -22,5 +22,5 @@ public class Flashcard {
 
     @Column(nullable = false)
     @JsonProperty("answer")
-    private String answer;
+    private String correctAnswer;
 }
