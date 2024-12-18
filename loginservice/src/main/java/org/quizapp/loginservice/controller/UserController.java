@@ -1,7 +1,6 @@
 package org.quizapp.loginservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.quizapp.loginservice.dtos.FlashcardDTO;
 import org.quizapp.loginservice.dtos.UserDTO;
 import org.quizapp.loginservice.dtos.UserRegisterDTO;
 import org.quizapp.loginservice.model.User;
@@ -9,7 +8,6 @@ import org.quizapp.loginservice.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.quizapp.loginservice.client.FlashcardClient;
 
 import java.util.List;
 import java.util.Map;
@@ -21,18 +19,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final FlashcardClient flashcardClient;
-
-
-
-    @GetMapping("/exists")
-    public ResponseEntity<?> checkUserExists(@RequestParam String email) {
-        boolean userExists = userService.existsByEmail(email);
-        if (!userExists) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
-    }
+    //private final FlashcardClient flashcardClient;
 
 
     //denne funker
@@ -53,6 +40,7 @@ public class UserController {
         }
     }
 
+    //denne funker
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
@@ -64,7 +52,6 @@ public class UserController {
     }
 
 
-//viser fornavn, etternavn og rolle navn
     //Denne funker
 @GetMapping
 public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -80,6 +67,7 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
     return ResponseEntity.ok(userDTOs);
 }
 
+//denne funker
     @GetMapping("/search/{firstName}/{lastName}")
     public ResponseEntity<List<UserDTO>> searchUsers(
             @PathVariable String firstName,
@@ -96,11 +84,11 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/flashcards/{quizId}")
+    /*@GetMapping("/flashcards/{quizId}")
     public ResponseEntity<List<FlashcardDTO>> getFlashcardsForQuiz(@PathVariable Long quizId) {
         List<FlashcardDTO> flashcards = flashcardClient.getFlashcards(quizId);
         return ResponseEntity.ok(flashcards);
-    }
+    }*/
 
 
 }

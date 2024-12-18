@@ -32,7 +32,4 @@ public class Quiz {
     @JsonManagedReference
     private List<Question> questions;
 
-
-
-
 }

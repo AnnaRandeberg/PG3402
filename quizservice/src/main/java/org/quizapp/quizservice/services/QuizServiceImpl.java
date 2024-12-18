@@ -25,12 +25,6 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.findById(quizId).orElse(null);
     }
 
-   /* @Override
-    public Quiz addQuiz(Quiz quiz) {
-        Quiz savedQuiz = quizRepository.save(quiz);
-        return savedQuiz;
-    }*/
-
     @Override
     public Quiz addQuiz(Quiz quiz) {
         for (Question question : quiz.getQuestions()) {
@@ -88,7 +82,7 @@ public class QuizServiceImpl implements QuizService {
         if (quiz == null) return false;
 
         return quiz.getQuestions().stream()
-                .anyMatch(q -> q.getId().equals(questionId) && q.getAnswer().equalsIgnoreCase(userAnswer));
+                .anyMatch(q -> q.getId().equals(questionId) && q.getCorrectAnswer().equalsIgnoreCase(userAnswer));
     }
 
 

@@ -1,4 +1,4 @@
-package org.quizapp.scoreservice.amqp;
+package org.quizapp.scoreservice.eventdriven;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +8,6 @@ import org.quizapp.scoreservice.model.Score;
 import org.quizapp.scoreservice.services.ScoreService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -30,6 +28,7 @@ public class QuizEventListener {
             score.setQuizTitle(event.getTitle());
             score.setSubject(event.getSubject());
             score.setRole(event.getRole());
+            score.setEmail(event.getEmail());
 
             scoreService.saveScore(score);
             log.info("Score saved successfully: {}", score);

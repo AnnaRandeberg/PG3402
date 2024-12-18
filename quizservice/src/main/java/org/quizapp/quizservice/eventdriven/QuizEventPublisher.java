@@ -3,7 +3,6 @@ package org.quizapp.quizservice.eventdriven;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quizapp.quizservice.dtos.QuizCompleteDTO;
-import org.quizapp.quizservice.dtos.QuizEventDTO;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,12 +34,6 @@ public class QuizEventPublisher {
         log.info("Publishing QuizEvent: {}", event);
         amqpTemplate.convertAndSend(exchangeName, "quiz.complete", event);
     }
-
-
-
-
-
-
 
 }
 
