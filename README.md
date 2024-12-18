@@ -186,3 +186,91 @@ Below is a list of functionalities and how to test them using Postman:
     "email": "kally@gmail.com"
   }
   ```
+  
+## Other API Endpoints
+
+In addition to the user stories, we have chosen to include the following API endpoints to provide essential functionality for the FlashcardService. These endpoints allow users to create, retrieve, and interact with flashcards, as well as fetch flashcards associated with a quiz.
+
+---
+
+### **1. Create a Flashcard**
+- **Method:** `POST`
+- **URL:** `/flashcards`
+- **Description:** Allows users to create their own flashcards, mimicking the real-life process of creating study cards.
+- **Request Body:**
+    ```json
+    {
+      "questionText": "What is 5 + 3?",
+      "answer": "8"
+    }
+    ```
+- **Response:**
+    ```json
+    {
+      "flashcardId": 1,
+      "questionText": "What is 5 + 3?",
+      "answer": "8"
+    }
+    ```
+
+---
+
+### **2. Retrieve All Flashcards**
+- **Method:** `GET`
+- **URL:** `/flashcards`
+- **Description:** Retrieves all existing flashcards created by users.
+- **Response Example:**
+    ```json
+    [
+      {
+        "flashcardId": 1,
+        "questionText": "What is 5 + 3?",
+        "answer": "8"
+      },
+      {
+        "flashcardId": 2,
+        "questionText": "What is the capital of France?",
+        "answer": "Paris"
+      }
+    ]
+    ```
+
+---
+
+### **3. Retrieve Flashcards from a Quiz**
+- **Method:** `GET`
+- **URL:** `/flashcards/quiz/{id}`
+- **Description:** Fetches flashcards related to a specific quiz by its ID. This endpoint relies on REST communication with the QuizService.
+- **Example Request:** `GET /flashcards/quiz/1`
+- **Response Example:**
+    ```json
+    {
+      "quizId": 1,
+      "title": "Matte 8. klasse",
+      "questions": [
+        {
+          "questionText": "What is 2 + 2?",
+          "answer": "4"
+        },
+        {
+          "questionText": "What is 3 * 3?",
+          "answer": "9"
+        }
+      ]
+    }
+    ```
+
+---
+
+We included these endpoints to enhance the usability and flexibility of the FlashcardService. Specifically:
+
+1. **Creating Flashcards (POST):**
+   - This functionality allows users to create their own flashcards, similar to how they would in real life when studying. It supports personalized learning and adds interactivity to the application.
+
+2. **Retrieving Flashcards (GET):**
+   - Users can retrieve their created flashcards at any time, enabling easy access to study materials.
+
+3. **Fetching Flashcards from a Quiz (GET /quiz/{id}):**
+   - By integrating with the QuizService, users can fetch flashcards directly tied to quizzes. This promotes seamless interaction between services and demonstrates RESTful communication.
+
+These features ensure that the FlashcardService is practical, user-friendly, and connected to the broader system architecture, allowing for both manual and automated flashcard management.
